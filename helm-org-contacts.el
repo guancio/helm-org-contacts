@@ -145,7 +145,13 @@
 (defun helm-org-contacts-alist-get-all (prop alist)
   "Returns a list containing the values of all entries of 
 ALIST that have PROP as the key."
-  (-map 'cdr (--filter (eq (car it) prop) alist)))
+  (let ((props (-map 'cdr (--filter (eq (car it) prop) alist))))
+    (cond
+     ((eq :EMAIL prop)
+      (apply 'append (-map 'split-string props)))
+     ((eq :PHONE prop)
+      (apply 'append (-map 'split-string props)))
+     (t props))))
 
 (defun helm-org-contacts-format-field (value prop)
   (cond
